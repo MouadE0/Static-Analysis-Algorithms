@@ -12,7 +12,7 @@ BE 1 focuses on path analysis within a graph structure. The provided Datalog cod
 File 2 deals with points-to analysis in the context of program memory and addresses questions related to aliasing, pointer assignments, and function calls. The Datalog code models a simplified program with pointer manipulation operations.
 
 
-# BE3 : Polynomial-Roots-Library
+## BE3 : Polynomial-Roots-Library
 
 This repository contains a C library for computing roots of second-order polynomials (`ax^2 + bx + c = 0`). The library is designed to handle integer coefficients (`a`, `b`, `c`) and provides solutions in the form of float roots. The library is accompanied by unit tests to ensure its correctness.
 
