@@ -1,0 +1,5 @@
+#include "pointsToAnalysisDatalog.dl"
+
+address_of("x", "y").
+address_of("p", "x").
+load("q", "p").

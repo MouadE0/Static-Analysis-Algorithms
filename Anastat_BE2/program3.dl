@@ -1,0 +1,7 @@
+#include "pointsToAnalysisDatalog.dl"
+
+address_of(x, y).
+address_of(q, x).
+address_of(t, q).
+assign(p, t).
+

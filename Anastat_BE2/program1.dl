@@ -1,0 +1,3 @@
+#include "pointsToAnalysisDatalog.dl"
+
+address_of(p, x).

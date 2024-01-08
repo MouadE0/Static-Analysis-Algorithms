@@ -1,0 +1,98 @@
+.type id <: symbol  
+.decl address_of(x:id, y:id) // x = &y  
+.decl assign(l:id, r:id) // l = r  
+.decl load(y:id, x:id) // y = *x  
+.decl store(x:id, y:id) // *x = y
+
+// Part 1 - Question 1
+
+address_of(p, y).
+address_of(q, p).
+address_of(t, x).
+assign(q, t).
+load(v, q).
+
+// Part 1 - Question 2
+points_to(p, v) :- address_of(p, v).
+points_to(p, v) :- assign(l, r), points_to(p, r).
+points_to(p, v) :- load(r, p), points_to(r, v).
+points_to(p, v) :- store(p, v), points_to(p, v).
+
+
+// Part 1 - Question 3
+points_to(p, x) :- address_of(p, x).
+points_to(q, x) :- address_of(q, p), points_to(p, x).
+points_to(t, x) :- address_of(t, x).
+points_to(x, v) :- load(v, q), points_to(q, x).
+points_to(y, v) :- load(v, q), points_to(q, y).
+
+// Part 3 - Question 4
+
+.decl pointed_by(v: id, p: id, n: number)
+pointed_by(v, p, 0) :- points_to(p, v).
+
+// Testing
+
+
+
+// Part 3 - Question 5
+
+.decl aliased(p: id, q: id)
+
+aliased(p, q) :- points_to(p, x), points_to(q, x).
+
+// Testing :
+int x, y;
+int *p = &x;
+int *q = &y;
+int *r = &x;
+if (aliased(p, q)) {
+    printf("p and q are aliased\n");
+}
+if (aliased(p, r)) {
+    printf("p and r are aliased\n");
+}
+
+// Part 4 - Question 6
+
+address_of("p", "y").
+address_of("t", "x").
+function("fun", "f_p", "f_r").
+load("v", "q") :- points_to(q, "p").
+store("q", "t") :- points_to(q, "p"), address_of("z", "x"), points_to("z", "p").
+call("fun", "w", "r") :- function("fun", "f_p", "f_r"), points_to("w", "z"), call("fun", "f_p", "f_r").
+
+// Part 4 - Question 7
+
+points_to(p, x) :- address_of(p, x).
+points_to(q, x) :- address_of(q, p), points_to(p, x).
+points_to(p, x) :- call(fun, arg, ret), formal_in(fun, formal, arg), formal_out(fun, formal, ret), points_to(p, formal), points_to(ret, x).
+
+// Testing question 7 
+address_of("p", "y").
+address_of("t", "x").
+function("fun", "f_p", "f_r").
+load("v", "q").
+store("q", "t").
+call("fun", "w", "r").
+formal_in("fun", "f_p", "w").
+formal_out("fun", "f_p", "z").
+formal_out("fun", "f_r", "r").
+
+
+// Part 4 - Question 8
+
+address_of("p", "y").
+address_of("t", "x").
+function("fun", "f_p", "f_r").
+store("q", "t") :- address_of("q", "p").
+load("v", "q").
+call("fun", "w", "r") :- store("z", "p"), address_of("z", "x"), store("w", "z").
+address_of("w2", "y").
+call("fun", "w2", "r2").
+
+// The point is : Having r that point to x while r2 points to y
+
+
+
+

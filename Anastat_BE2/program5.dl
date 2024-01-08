@@ -1,0 +1,6 @@
+#include "pointsToAnalysisDatalog.dl"
+
+address_of("p", "x").
+address_of("q", "p").
+address_of("r", "y").
+store("q", "r").

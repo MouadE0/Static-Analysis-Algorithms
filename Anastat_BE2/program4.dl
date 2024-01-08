@@ -1,0 +1,14 @@
+#include "pointsToAnalysisDatalog.dl"
+
+address_of(q, x).
+address_of(q, y).
+address_of(t, q).
+assign(t,q).
+store(t,v).
+
+/*
+The value of x and y after execution would be v 
+(which is 0), because y is assigned the value of x and then 
+overwritten with the value of v through the pointer t. Thus x will not be
+changed even with the compilation of the code
+*/

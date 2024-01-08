@@ -1,0 +1,80 @@
+.decl node(x:symbol)                // A node with name x
+.decl edge(src:symbol,dst:symbol)   // An edge from src to dst
+.decl in (x:symbol)                 // Node x is an input node
+
+
+// Q2.
+
+.decl path(n:symbol, m:symbol)
+path(n, m) :- edge(n, m).             
+path(n, m) :- edge(n, x), path(x, m). 
+.output path
+
+// Q3.
+
+.decl reachable(n: symbol)
+reachable(n) :- in(in_node), path(in_node, n). 
+.output reachable
+
+// Q4.
+
+.decl not_reachable(n: symbol)
+not_reachable(n) :-  node(n), !in(n), !reachable(n).
+.output not_reachable
+
+// Q5.
+.decl scc(n: symbol)
+scc(n) :- reachable(n), path(x, n), path(n, x).
+.output scc
+
+// Q6.
+
+.decl path_length(n:symbol, sz:number)
+
+path_length(n, 0) :- node(n).
+path_length(n, sz) :- path_length(x, sz-1), edge(x, n).
+
+.subsumes path_length(n, sz) < path_length(n, sz+1).
+
+.output path_length
+
+// Q7.
+
+.decl path_length(n: symbol, sz: number)
+
+path_length(n, 0) :- node(n).
+path_length(n, sz) :- path_length(x, sz-1), edge(x, n).
+
+.subsumes path_length(n, sz) < path_length(n, sz+1).
+.subsumes path_length(n, sz) < path_length(n, sz-1), !path_length(n, sz).
+
+.output path_length
+
+
+// Q8.
+
+.decl shortest_path(n0:symbol, n1:symbol, sz:number)
+
+shortest_path(n0, n1, sz) :- path_length(n0, sz), path_length(n1, sz), path(n0, x), path(n1, x), path_length(x, sz-1).
+
+.subsumes shortest_path(n0, n1, sz) < shortest_path(n0, n1, sz+1).
+.subsumes shortest_path(n0, n1, sz) < shortest_path(n0, n1, sz-1), !shortest_path(n0, n1, sz), !shortest_path(n0, n1, sz+1).
+
+.output shortest_path
+
+// Q9.
+
+.decl path_list(node:symbol, next:list)
+
+.decl shortest_path(n0:symbol, n1:symbol, sz:number, path:path_list)
+
+path_list(x, []) :- x =/= n0.
+
+path_list(x, [y | p]) :- path(n0, y), path_list(y, p), sz = len([y | p]), path(n1, x), sz > 0.
+
+shortest_path(n0, n1, sz, [n0 | p]) :- path(n0, y), path_list(y, p), sz = len([n0 | p]), path(n1, x), sz > 0.
+
+.subsumes shortest_path(n0, n1, sz, p) < shortest_path(n0, n1, sz+1, p).
+.subsumes shortest_path(n0, n1, sz, p) < shortest_path(n0, n1, sz-1, p), !shortest_path(n0, n1, sz, p), !shortest_path(n0, n1, sz+1, p).
+
+.output shortest_path
